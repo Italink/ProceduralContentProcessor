@@ -1,0 +1,36 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "ProceduralContentProcessor",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "Italink",
+	"CreatedByURL": "",
+	"DocsURL": "https://github.com/Italink/ProceduralContentProcessor",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/Italink/ProceduralContentProcessor/issues",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"LocalizationTargets": [
+		{
+			"Name": "ProceduralContentProcessor",
+			"LoadingPolicy": "Editor"
+		}
+	],
+	"Modules": [
+		{
+			"Name": "ProceduralContentProcessor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "LevelStreamingPersistence",
+			"Enabled": true
+		}
+	]
+}

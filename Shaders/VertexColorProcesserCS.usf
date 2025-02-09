@@ -1,0 +1,25 @@
+#include "/Engine/Public/Platform.ush"
+
+uint VertexCount;
+Buffer<float3> PositionBuffer;
+Buffer<float3> NormalBuffer;
+Buffer<float2> UVBuffer;
+
+RWBuffer<float4> ColorBuffer;
+
+float4 FillVertexColor(float3 Position, float3 Normal, float2 UV)
+{
+	return float4(1, 1, 1, 1);
+}
+
+[numthreads(128, 1, 1)]
+void MainCS(
+	uint3 DispatchThreadId : SV_DispatchThreadID,
+	uint GroupIndex : SV_GroupIndex )
+{
+	const uint VertexIndex = DispatchThreadId.x;
+	if (VertexIndex >= VertexCount)
+		return;
+
+    ColorBuffer[VertexIndex] = FillVertexColor(PositionBuffer[VertexIndex], NormalBuffer[VertexIndex], UVBuffer[VertexIndex]);
+}

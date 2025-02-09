@@ -1,0 +1,10 @@
+Buffer<int> Input;
+RWBuffer<int> Output;
+[numthreads(THREADS_X, THREADS_Y, THREADS_Z)]
+void MainCS(
+	uint3 DispatchThreadId : SV_DispatchThreadID,
+	uint GroupIndex : SV_GroupIndex )
+{
+	// Outputs one number
+	Output[0] = Input[0] * Input[1];
+}
