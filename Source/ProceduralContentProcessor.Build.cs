@@ -4,8 +4,8 @@ using UnrealBuildTool;
 
 public class ProceduralContentProcessor : ModuleRules
 {
-	public ProceduralContentProcessor(ReadOnlyTargetRules Target) : base(Target){
-		bUsePrecompiled = true;
+	public ProceduralContentProcessor(ReadOnlyTargetRules Target) : base(Target)
+	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 

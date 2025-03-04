@@ -52,10 +52,7 @@ public:
 
 	virtual void Deactivate();
 
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override{
-		ReceivePostEditChangeProperty(PropertyChangedEvent.GetPropertyName(), EObjectPropertyChangeType(PropertyChangedEvent.ChangeType));
-		TryUpdateDefaultConfigFile();
-	}
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 	virtual TSharedPtr<SWidget> BuildWidget();
 
@@ -67,7 +64,7 @@ class PROCEDURALCONTENTPROCESSOR_API UProceduralAssetProcessor: public UProcedur
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintPure, Category = "ProceduralContentProcessor")
-	static TScriptInterface<IAssetRegistry> GetAssetRegistry();
+	TScriptInterface<IAssetRegistry> GetAllAssetRegistry();
 };
 
 UCLASS(Abstract, Blueprintable, EditInlineNew, CollapseCategories, config = ProceduralContentProcessor, defaultconfig)
@@ -75,52 +72,7 @@ class PROCEDURALCONTENTPROCESSOR_API UProceduralWorldProcessor: public UProcedur
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static TArray<AActor*> GetAllActorsByName(FString InName, bool bCompleteMatching = false);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static void DisableInstancedFoliageMeshShadow(TArray<UStaticMesh*> InMeshes);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static TArray<AActor*> BreakISM(AActor* InISMActor, bool bDestorySourceActor = true);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static AActor* MergeISM(TArray<AActor*> InSourceActors, TSubclassOf<UInstancedStaticMeshComponent> InISMClass, bool bDestorySourceActor = true);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static void SetHLODLayer(AActor* InActor, UHLODLayer *InHLODLayer);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static void SelectActor(AActor* InActor);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static void LookAtActor(AActor* InActor);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor", meta = (WorldContext = "WorldContextObject"))
-	static AActor* SpawnTransientActor(UObject* WorldContextObject, TSubclassOf<AActor> Class, FTransform Transform);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static AActor* ReplaceActor(AActor* InSrc, TSubclassOf<AActor> InDst, bool bNoteSelectionChange = false);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static void ReplaceActors(TMap<AActor*, TSubclassOf<AActor>> ActorMap, bool bNoteSelectionChange);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static void ActorSetIsSpatiallyLoaded(AActor* Actor, bool bIsSpatiallyLoaded);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static bool ActorAddDataLayer(AActor* Actor, UDataLayerAsset* DataLayerAsset);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static bool ActorRemoveDataLayer(AActor* Actor, UDataLayerAsset* DataLayerAsset);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static bool ActorContainsDataLayer(AActor* Actor, UDataLayerAsset* DataLayerAsset);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static FName ActorGetRuntimeGrid(AActor* Actor);
-
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static void ActorSetRuntimeGrid(AActor* Actor, FName GridName);
+	TArray<AActor*> GetAllActorsByName(FString InName, bool bCompleteMatching = false);
 protected:
 	virtual UWorld* GetWorld() const override;
 };
@@ -130,6 +82,7 @@ class PROCEDURALCONTENTPROCESSOR_API UProceduralActorColorationProcessor: public
 	GENERATED_BODY()
 public:
 	virtual void Activate() override;
+
 	virtual void Deactivate() override;
 
 	UFUNCTION(BlueprintNativeEvent, Category = "ProceduralContentProcessor", meta = (DisplayName = "Colour"))

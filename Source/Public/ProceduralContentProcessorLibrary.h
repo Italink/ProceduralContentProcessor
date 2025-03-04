@@ -99,11 +99,15 @@ public:
 
 
 	// Object Interface:
-	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static bool ObjectIsAsset(const UObject* InObject);
 
 	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
-	static TArray<UClass*> GetDerivedClasses(const UClass* ClassToLookFor, bool bRecursive);
+	static TArray<UObject*> GetAllObjectsOfClass(UClass* Class, bool bIncludeDerivedClasses = true);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static TArray<UObject*> GetAllObjectsWithOuter(UObject* Outer, bool bIncludeNestedObjects = true);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static TArray<UClass*> GetAllDerivedClasses(const UClass* ClassToLookFor, bool bRecursive);
 
 	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor", meta = (DefaultToSelf = "Outer"))
 	static UObject* DuplicateObject(UObject* SourceObject, UObject* Outer);
@@ -125,6 +129,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
 	static void ShowObjectDetailsView(UObject* InObject);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static void ShowObjectEditor(UObject* InObject);
 
 	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
 	static UObject* CopyProperties(UObject* SourceObject, UObject* TargetObject);
@@ -180,6 +187,12 @@ public:
 
 	// Asset Interface:
 	
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static bool ObjectIsAsset(const UObject* InObject);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static UBlueprint* GetBlueprint(UObject* InObject);
+
 	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
 	static bool IsNaniteEnable(UStaticMesh* InMesh);
 
@@ -240,6 +253,50 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
 	static UPhysicalMaterial* GetSimplePhysicalMaterial(UPrimitiveComponent* Component);
 
+	
+	// Actor Interface:
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static TArray<AActor*> BreakISM(AActor* InISMActor, bool bDestorySourceActor = true);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static AActor* MergeISM(TArray<AActor*> InSourceActors, TSubclassOf<UInstancedStaticMeshComponent> InISMClass, bool bDestorySourceActor = true);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static void SetHLODLayer(AActor* InActor, UHLODLayer *InHLODLayer);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static void SelectActor(AActor* InActor);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static void LookAtActor(AActor* InActor);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor", meta = (WorldContext = "WorldContextObject"))
+	static AActor* SpawnTransientActor(UObject* WorldContextObject, TSubclassOf<AActor> Class, FTransform Transform);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static AActor* ReplaceActor(AActor* InSrc, TSubclassOf<AActor> InDst, bool bNoteSelectionChange = false);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static void ReplaceActors(TMap<AActor*, TSubclassOf<AActor>> ActorMap, bool bNoteSelectionChange);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static void ActorSetIsSpatiallyLoaded(AActor* Actor, bool bIsSpatiallyLoaded);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static bool ActorAddDataLayer(AActor* Actor, UDataLayerAsset* DataLayerAsset);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static bool ActorRemoveDataLayer(AActor* Actor, UDataLayerAsset* DataLayerAsset);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static bool ActorContainsDataLayer(AActor* Actor, UDataLayerAsset* DataLayerAsset);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static FName ActorGetRuntimeGrid(AActor* Actor);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static void ActorSetRuntimeGrid(AActor* Actor, FName GridName);
 
 	static TArray<TSharedPtr<FSlowTask>> SlowTasks;
 };
