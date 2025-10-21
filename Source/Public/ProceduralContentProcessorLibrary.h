@@ -6,6 +6,8 @@
 #include "NiagaraEmitter.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "PhysicsEngine/AggregateGeom.h"
+#include "PhysicsEngine/BodySetup.h"
 #include "ProceduralContentProcessorLibrary.generated.h"
 
 class ALandscape;
@@ -212,10 +214,22 @@ public:
 	static UStaticMesh* GetComplexCollisionMesh(UStaticMesh* InMesh);
 
 	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static UBodySetup* GetBodySetup(UStaticMesh* InMesh);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static int32 GetTotalCollisionVertexCount(UBodySetup* InBodySetup);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
 	static void SetStaticMeshPivot(UStaticMesh* InStaticMesh, EStaticMeshPivotType PivotType);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ProceduralContentProcessor")
 	static UStaticMeshEditorSubsystem* GetStaticMeshEditorSubsystem();
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static int GetTriangleCount(USkeletalMesh* InSkeletalMesh,int32 LODIndex);
+
+	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
+	static int GetMaxBoneInfluences(USkeletalMesh* InSkeletalMesh, int32 LODIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "ProceduralContentProcessor")
 	static float GetLodScreenSize(UStaticMesh* InStaticMesh, int32 LODIndex);

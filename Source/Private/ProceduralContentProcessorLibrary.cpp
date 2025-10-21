@@ -41,6 +41,7 @@
 #include "SLevelViewport.h"
 #include "TextureCompiler.h"
 #include "ImageUtils.h"
+#include "Rendering/SkeletalMeshRenderData.h"
 
 #define LOCTEXT_NAMESPACE "ProceduralContentProcessor"
 
@@ -521,6 +522,45 @@ UStaticMesh* UProceduralContentProcessorLibrary::GetComplexCollisionMesh(UStatic
 	return InMesh->ComplexCollisionMesh;
 }
 
+UBodySetup* UProceduralContentProcessorLibrary::GetBodySetup(UStaticMesh* InMesh)
+{
+	if (!InMesh)
+		return nullptr;
+	return InMesh->GetBodySetup();
+}
+
+int32 UProceduralContentProcessorLibrary::GetTotalCollisionVertexCount(UBodySetup* InBodySetup)
+{
+	if (InBodySetup == nullptr)
+		return 0;
+
+	FProperty* AggregateGeomProp = FindFProperty<FProperty>(UBodySetup::StaticClass(), "AggGeom");
+	FKAggregateGeom* AggregateGeom = AggregateGeomProp->ContainerPtrToValuePtr<FKAggregateGeom>(InBodySetup);
+;
+	int32 TotalVertexCount = 0;
+
+	TotalVertexCount += AggregateGeom->BoxElems.Num() * 6;
+
+	TotalVertexCount += AggregateGeom->SphereElems.Num() * 1;
+
+	TotalVertexCount += AggregateGeom->SphylElems.Num() * 3;
+
+	TotalVertexCount += AggregateGeom->TaperedCapsuleElems.Num() * 3;
+
+	for (const auto& Convex : AggregateGeom->ConvexElems)
+	{
+		if (Convex.GetChaosConvexMesh().IsValid())
+		{
+			if (const auto ChaosConvex = Convex.GetChaosConvexMesh())
+			{
+				TotalVertexCount += ChaosConvex->GetVertices().Num();
+			}
+		}
+	}
+
+	return TotalVertexCount;
+}
+
 void UProceduralContentProcessorLibrary::SetStaticMeshPivot(UStaticMesh* InStaticMesh, EStaticMeshPivotType PivotType)
 {
 	if(InStaticMesh == nullptr)
@@ -553,6 +593,30 @@ void UProceduralContentProcessorLibrary::SetStaticMeshPivot(UStaticMesh* InStati
 UStaticMeshEditorSubsystem* UProceduralContentProcessorLibrary::GetStaticMeshEditorSubsystem()
 {
 	return GEditor->GetEditorSubsystem<UStaticMeshEditorSubsystem>();
+}
+
+int UProceduralContentProcessorLibrary::GetTriangleCount(USkeletalMesh* InSkeletalMesh, int32 LODIndex)
+{
+	const FSkeletalMeshLODInfo* LODInfo = InSkeletalMesh->GetLODInfo(LODIndex);
+	FSkeletalMeshRenderData* SkelMeshRenderData = InSkeletalMesh->GetResourceForRendering();
+	if (SkelMeshRenderData && SkelMeshRenderData->LODRenderData.Num() > LODIndex)
+	{
+		const FSkeletalMeshLODRenderData& LODData = SkelMeshRenderData->LODRenderData[LODIndex];
+		return LODData.GetTotalFaces();;
+	}
+	return 0;
+}
+
+int UProceduralContentProcessorLibrary::GetMaxBoneInfluences(USkeletalMesh* InSkeletalMesh, int32 LODIndex)
+{
+	const FSkeletalMeshLODInfo* LODInfo = InSkeletalMesh->GetLODInfo(LODIndex);
+	FSkeletalMeshRenderData* SkelMeshRenderData = InSkeletalMesh->GetResourceForRendering();
+	if (SkelMeshRenderData && SkelMeshRenderData->LODRenderData.Num() > LODIndex)
+	{
+		const FSkeletalMeshLODRenderData& LODData = SkelMeshRenderData->LODRenderData[LODIndex];
+		return LODData.GetVertexBufferMaxBoneInfluences();
+	}
+	return 0;
 }
 
 float UProceduralContentProcessorLibrary::GetLodScreenSize(UStaticMesh* InStaticMesh, int32 LODIndex)
